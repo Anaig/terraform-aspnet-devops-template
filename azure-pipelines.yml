@@ -31,7 +31,7 @@ variables:
 - name: AKS_SP_CLIENT_ID
   value: 4c90a2fe-7261-475a-ae98-a6acfbcc5d17
 - name: AKS_SP_OBJECT_ID
-  value: 235c67ad-81ff-4c43-bda8-b5f1b9120a77
+  value: 8cacad93-7d37-41aa-a82e-052a41a591fd
 - name: AKS_VERSION
   value: 1.15.7
 - name: HELM_RELEASE_NAME
