@@ -27,11 +27,11 @@ variables:
 - name: ACR_NAME
   value: $(APP_NAME)aspnetmplt
 - name: TERRAFORM_SP_CLIENT_ID
-  value: df9df564-e889-4852-9bb2-aa912d990c93
+  value: 4074cb3c-3797-4596-8031-22fc03770b84
 - name: AKS_SP_CLIENT_ID
-  value: cd0ad856-af8e-424e-b935-ce7ad6da5c9d
+  value: 4c90a2fe-7261-475a-ae98-a6acfbcc5d17
 - name: AKS_SP_OBJECT_ID
-  value: ddf63018-48fb-4738-a3f5-0062fb16dbb0
+  value: 235c67ad-81ff-4c43-bda8-b5f1b9120a77
 - name: AKS_VERSION
   value: 1.15.7
 - name: HELM_RELEASE_NAME
@@ -39,7 +39,7 @@ variables:
 - name: RESOURCE_GROUP
   value: aspnetmplt
 - name: ARM_SUBSCRIPTION_ID
-  value: a4ed7b9a-b128-49b4-a6ee-fd07ff6e296d
+  value: f3414c2e-c479-484b-b19e-1787de6e0140
 - name: ARM_TENANT_ID
   value: 72f988bf-86f1-41af-91ab-2d7cd011db47
 - name: TERRAFORM_SERVICE_CONNECTION
