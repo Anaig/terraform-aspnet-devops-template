@@ -3,7 +3,7 @@
 resource "random_id" "workspace" {
   keepers = {
     # Generate a new id each time we switch to a new resource group
-    group_name = var.resource_group_name
+    group_name = "random_rg_name"
   }
 
   byte_length = 8
