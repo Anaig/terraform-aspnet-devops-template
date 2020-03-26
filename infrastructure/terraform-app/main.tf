@@ -4,7 +4,7 @@ resource "helm_release" "build" {
   namespace  = var.kubernetes_namespace
 
   wait       = true
-  timeout    = 300
+  timeout    = 600
 
   set {
     name  = "image.repository"
