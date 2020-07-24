@@ -27,25 +27,29 @@ variables:
 - name: ACR_NAME
   value: $(APP_NAME)aspnetmplt
 - name: TERRAFORM_SP_CLIENT_ID
-  value: 4074cb3c-3797-4596-8031-22fc03770b84
+  value: 1816220a-a94c-4bba-87f2-474af739adcc
 - name: AKS_SP_CLIENT_ID
-  value: 4c90a2fe-7261-475a-ae98-a6acfbcc5d17
+  value: 41ac1793-51bf-4dba-823a-53d708f3e7f5
 - name: AKS_SP_OBJECT_ID
-  value: 8cacad93-7d37-41aa-a82e-052a41a591fd
+  value: a6edfb42-2d98-4777-9a09-8ff0d15de02b
+- name: APP_SP_CLIENT_ID
+  value: cd0ad856-af8e-424e-b935-ce7ad6da5c9d
+- name: APP_SP_OBJECT_ID
+  value: ddf63018-48fb-4738-a3f5-0062fb16dbb0
 - name: AKS_VERSION
   value: 1.15.7
 - name: HELM_RELEASE_NAME
   value: contoso
 - name: RESOURCE_GROUP
-  value: aspnetmplt
-- name: ARM_SUBSCRIPTION_ID
+  value: terraform_aspnet_rg
+- name: SUBSCRIPTION_ID
   value: f3414c2e-c479-484b-b19e-1787de6e0140
-- name: ARM_TENANT_ID
+- name: TENANT_ID
   value: 72f988bf-86f1-41af-91ab-2d7cd011db47
 - name: TERRAFORM_SERVICE_CONNECTION
-  value: Terraform
+  value: aspsc
 - name: TERRAFORM_STORAGE_ACCOUNT
-  value: $(APP_NAME)terraform
+  value: asmictfstorage
 - name: AGENT_POOL_NAME
   value: aspnetmplt
 - name: JMETER_VERSION
@@ -53,6 +57,15 @@ variables:
 # Enable buildkit to speed up multi-stage pipeline builds (avoid running unit tests twice)
 - name: DOCKER_BUILDKIT
   value: 1
+# Variables for Terraform Azure storage backend provider
+- name: ARM_SUBSCRIPTION_ID
+  value: $(SUBSCRIPTION_ID)
+- name: ARM_TENANT_ID
+  value: $(TENANT_ID)
+- name: ARM_CLIENT_ID
+  value: $(TERRAFORM_SP_CLIENT_ID)
+- name: ARM_CLIENT_SECRET
+  value: $(TERRAFORM_SP_CLIENT_SECRET)
 
 pool:
   vmImage: ubuntu-latest
