@@ -58,6 +58,14 @@ export DEBIAN_FRONTEND=noninteractive
 echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90assumeyes
 echo 'Dpkg::Use-Pty "0";' > /etc/apt/apt.conf.d/00usepty
 
+echo "Updating for Helm package"
+
+curl https://helm.baltorepo.com/organization/signing.asc | sudo apt-key add -
+apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+
+echo "Installing apt packages"
+
 
 apt-get update
 apt-get install -y --no-install-recommends \
@@ -67,6 +75,12 @@ apt-get install -y --no-install-recommends \
         docker.io \
         curl \
         unzip
+
+echo "validating agent pool"
+
+agent_pool_json=$(curl -sfu ":${az_devops_pat}" "${az_devops_url}_apis/distributedtask/pools?poolName=${az_devops_agent_pool}&actionFilter=manage&api-version=5.1")
+agent_pool_id=$(jq -e -r '.value[0].id' <<< "$agent_pool_json")
+echo "agent pool: $agent_pool_id"
 
 echo "Configuring regular cleanup of cached Docker images and data"
 
@@ -103,14 +117,28 @@ for agent_num in $(seq 1 $az_devops_agents_per_vm); do
     tar zxf ../agent_package.tar.gz
     chmod -R 777 .
     echo "extracted"
-    ./bin/installdependencies.sh
-    echo "dependencies installed"
+    if [ "$agent_num" -eq 1 ]; then
+      ./bin/installdependencies.sh
+      echo "dependencies installed"
+  
+      # Reinstall curl (uninstalled by DevOps agent install script)
+      echo "installing curl"
+      apt-get install -y --no-install-recommends curl
+    fi
 
     if test -e .agent; then
       echo "attempting to uninstall agent"
       ./svc.sh stop || true
       ./svc.sh uninstall || true
       sudo -u azuredevopsuser ./config.sh remove --unattended --auth pat --token "$az_devops_pat" || true
+    fi
+
+    # If VM name is reused in VMSS, must remove agent name from agent pool before installing a new agent with the same name
+    agent_json=$(curl -sfu ":${az_devops_pat}" "${az_devops_url}_apis/distributedtask/pools/${agent_pool_id}/agents?agentName=${agent_name}&api-version=5.1")
+    agent_id=$(jq -r 'if .value[0] then .value[0].id else empty end' <<< "$agent_json")
+    if test -n "$agent_id"; then
+      echo "Deleting agent: $agent_id"
+      curl -sfu ":${az_devops_pat}" -XDELETE "${az_devops_url}_apis/distributedtask/pools/${agent_pool_id}/agents/${agent_id}?api-version=5.1"
     fi
 
     echo "running installation"
